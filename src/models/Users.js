@@ -1,11 +1,14 @@
-const mongoose=require ('mongoose');
+const mongoose = require('mongoose');
 
- let userSchema= new mongoose.Schema({
-    name:String,
-    age:Number,
-    favoriteFood:Array,
- 
+let userSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    age: { type: Number, required: true },
+    favoriteFood: { type: Array, required: true },
 
+    created: {
+        type: Date,
+        default: new Date()
+    }
 })
-var User = mongoose.model('user', userSchema);
-module.exports= User
+
+module.exports = mongoose.model('users', userSchema);

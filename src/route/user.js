@@ -1,40 +1,43 @@
-const express= require('express')
-const mongoos=require('mongoose')
+const express = require('express')
+const mongoos = require('mongoose')
 let User = require('../models/Users');
-var Router=express()
+var router = express.Router()
 
+// create user
+router.post('/add', function (req, res) {
+  const newUser = new User(req.body);
+  newUser
+    .save()
+    .then(user => res.json(user))
+    .catch(err => res.json(err));
+ 
+});
 
-
-// 
-
-
-
-
-Router.route('/').get((req, res) => {
-    
+// Find all users 
+router.get('/', function (req, res) {
   User.find()
+    .then(users => res.json({message:"success", users}))
+    .catch(err => res.json(err));
+});
+
+// Find one user
+router.get("/:id", function (req, res) {
+  User.findById(req.params.id)
     .then(users => res.json(users))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch(err => res.json(err));
+
 });
-
-Router.route('/add').post((req, res) => {
-  const user = req.body.user;
-
-  const newUser = new User({user:user});
-
-  newUser.save()
-    .then(() => res.json('User added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-module.exports = Router
-  // find all users
-
-
-  // find a user
-
-
-  // udapte a user
-
-
 
   // delete a user
+  router.delete("/:id",function (req,res ){
+    User.findByIdAndDelete(req.params.id)
+    .then(users => res.json({message:"delete successfully",users}))
+    .catch(err => res.json(err));
+  })
+module.exports = router
+//apdate one user
+router.put('/:id',function(req,res){
+  User.findByIdAndUpdate(req.params.id)
+  .then(users => res.json({message:"update successfully",users}))
+  .catch(err => res.json(err));
+})
